@@ -47,14 +47,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mImageSaver = new ImageSaver();
         mSurfaceHolder = mSurfaceView.getHolder();
         mSurfaceHolder.addCallback(MainActivity.this);
-        mCameraDevice = android.hardware.Camera.open(0);// 0 后置 1 前置
+        if (mCameraDevice == null) {
+            mCameraDevice = android.hardware.Camera.open(0);// 0 后置 1 前置
+        }
         mParameters = mCameraDevice.getParameters();
 
-        rapidFlag = true;
-        btnTakePicture.setEnabled(false);
-        if (NUM_QUICK_CAPTURE_PICTURE_MAX == 0) {
-            NUM_QUICK_CAPTURE_PICTURE_MAX = 8;
-        }
+        rapidFlag = false;
+//        btnTakePicture.setEnabled(false);
+//        if (NUM_QUICK_CAPTURE_PICTURE_MAX == 0) {
+//            NUM_QUICK_CAPTURE_PICTURE_MAX = 8;
+//        }
 
     }
 
@@ -68,6 +70,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     NUM_QUICK_CAPTURE_PICTURE_MAX = 8;
                 }
                 break;
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mCameraDevice != null) {
+            mCameraDevice.release();
+            mCameraDevice = null;
+
         }
     }
 
